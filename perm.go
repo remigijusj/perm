@@ -1,9 +1,10 @@
 package perm
 
 import (
+  "bytes"
   "errors"
   "fmt"
-  _ "regexp"
+  "regexp"
   "sort"
 )
 
@@ -19,6 +20,9 @@ func NewPerm(from []int) (*Perm, error) {
 }
 
 func ParseCycles(from string) (*Perm, error) {
+  rx := regexp.MustCompile(`\((\d+(?:\s*,\s*\d+)*)\)`)
+  cycles := rx.FindAllString(from, -1)
+  println(cycles)
   // TBD
   return nil, nil
 }
@@ -36,9 +40,19 @@ func (p *Perm) String() string {
 }
 
 func (p *Perm) PrintCycles() string {
-  // cycles := getCycles()
-  // TBD
-  return ""
+  cycles := p.getCycles()
+  var buf bytes.Buffer
+  for _, cycle := range cycles {
+    buf.WriteString("(")
+    for idx, i := range cycle {
+      if idx > 0 {
+        buf.WriteString(", ")
+      }
+      fmt.Fprintf(&buf, "%d", i)
+    }
+    buf.WriteString(")")
+  }
+  return buf.String()
 }
 
 func (p *Perm) Size() int {
@@ -109,6 +123,32 @@ func copySlice(from []int) []int {
 }
 
 func (p *Perm) getCycles() [][]int {
-  // TBD
-  return nil
+  size := len(p.elements)
+  cycles := make([][]int, 0, 1)
+  marks := make([]bool, size)
+  for {
+    // find first unmarked
+    m := -1
+    for i:=0; i<size; i++ {
+      if !marks[i] {
+        m = i
+        break
+      }
+    }
+    if m == -1 {
+      break
+    }
+    // construct a cycle
+    cycle := make([]int, 0, 1)
+    for j := m; !marks[j]; j=p.elements[j] {
+      marks[j] = true
+      cycle = append(cycle, j)
+    }
+    cycles = append(cycles, cycle)
+  }
+  // exceptional case: empty
+  if len(cycles) == 0 {
+    cycles = append(cycles, []int{})
+  }
+  return cycles
 }

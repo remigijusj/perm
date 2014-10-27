@@ -73,3 +73,26 @@ func TestPower(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestPrintCycles(t *testing.T) {
+	p, e := NewPerm([]int{})
+	if e != nil || p.PrintCycles() != "()" {
+		t.Fail()
+	}
+	p, e = NewPerm([]int{0})
+	if e != nil || p.PrintCycles() != "(0)" {
+		t.Fail()
+	}
+	p, e = NewPerm([]int{1, 2, 3, 4, 5, 0})
+	if e != nil || p.PrintCycles() != "(0, 1, 2, 3, 4, 5)" {
+		t.Fail()
+	}
+	p, e = NewPerm([]int{1, 2, 0, 4, 5, 3})
+	if e != nil || p.PrintCycles() != "(0, 1, 2)(3, 4, 5)" {
+		t.Fail()
+	}
+	p, e = NewPerm([]int{5, 4, 3, 2, 1, 0})
+	if e != nil || p.PrintCycles() != "(0, 5)(1, 4)(2, 3)" {
+		t.Fail()
+	}
+}
