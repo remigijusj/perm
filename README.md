@@ -1,4 +1,18 @@
 perm
-====
+=========
+Permutations are elements of a symmetric group on integers 0 .. n-1.
 
-Simple calculations with permutations in Go
+This package provides simple calculations with permutations:
+* identity
+* inverse
+* composition
+* power
+* conversion from/to cyclic form
+
+INSTALL
+-------
+	go get github.com/remigijusj/perm
+
+LICENSE
+-------
+BSD
