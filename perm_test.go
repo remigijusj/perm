@@ -31,15 +31,17 @@ func (s *MySuite) TestNewPerm(c *C) {
 	c.Check(e, IsNil)
 }
 
-func (s *MySuite) TestIdentity(c *C) {
-	p, e := Identity(-1)
+func (s *MySuite) TestIdentityInvalid(c *C) {
+	_, e := Identity(-1)
 	c.Check(e, NotNil)
 
-	p, e = Identity(1<<16 + 1)
+	_, e = Identity(1<<16 + 1)
 	c.Check(e, NotNil)
+}
 
-	p, e = Identity(3)
-	c.Check(e, IsNil)
+func (s *MySuite) TestIdentityValid(c *C) {
+	p, e := Identity(3)
+	c.Assert(e, IsNil)
 	c.Check(p.Size(), Equals, 3)
 	c.Check(p.String(), Equals, "[0 1 2]")
 }
@@ -87,8 +89,11 @@ func (s *MySuite) TestPower(c *C) {
 	c.Check(p.Power(2).String(), Equals, "[2 3 4 5 0 1]")
 }
 
-func (s *MySuite) TestSignature(c *C) {
-	p, e := NewPerm([]int{})
+func (s *MySuite) TestSignature0(c *C) {
+	var p *Perm
+	var e error
+
+	p, e = NewPerm([]int{})
 	c.Assert(e, IsNil)
 	c.Check(p.Signature(), DeepEquals, []int{0})
 

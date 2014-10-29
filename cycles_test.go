@@ -4,35 +4,50 @@ import (
 	. "gopkg.in/check.v1"
 )
 
-func (s *MySuite) TestParseCycles(c *C) {
+func (s *MySuite) TestParseCyclesInvalid(c *C) {
 	var e error
 
-	_, e = ParseCycles("()")
-	c.Assert(e, IsNil)
-
-	_, e = ParseCycles("( )( ( )(")
-	c.Assert(e, IsNil)
-
-	_, e = ParseCycles("(1)")
-	c.Assert(e, IsNil)
-
-	_, e = ParseCycles("(1,2)")
-	c.Assert(e, IsNil)
-
-	_, e = ParseCycles("(1, 2) (3, 4) ")
-	c.Assert(e, IsNil)
-
-	_, e = ParseCycles("(1 2)(3 12)(7 16)")
-	c.Assert(e, IsNil)
-
-	_, e = ParseCycles("(1 2)(3, 8)(7 4)()")
-	c.Assert(e, IsNil)
-
 	_, e = ParseCycles("(1 2 3 0)")
-	c.Assert(e, NotNil)
+	c.Check(e, NotNil)
 
 	_, e = ParseCycles("(1 2)(2, 3)")
-	c.Assert(e, NotNil)
+	c.Check(e, NotNil)
+
+	_, e = ParseCycles("(1, 2, 65537)")
+	c.Check(e, NotNil)
+}
+
+func (s *MySuite) TestParseCyclesValid(c *C) {
+	var p *Perm
+	var e error
+
+	p, e = ParseCycles("()")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[]")
+
+	p, e = ParseCycles("( )( ( )(")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[]")
+
+	p, e = ParseCycles("(1)")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[0]")
+
+	p, e = ParseCycles("(1,2)")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[1 0]")
+
+	p, e = ParseCycles("(1, 2) (3, 4) ")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[1 0 3 2]")
+
+	p, e = ParseCycles("(1 2)(3 12)(7 16)")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[1 0 11 3 4 5 15 7 8 9 10 2 12 13 14 6]")
+
+	p, e = ParseCycles("(1 2)(3, 8)(7 4)()")
+	c.Check(e, IsNil)
+	c.Check(p.String(), Equals, "[1 0 7 6 4 5 3 2]")
 }
 
 func (s *MySuite) TestPrintCycles(c *C) {
