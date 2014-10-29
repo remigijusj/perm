@@ -74,7 +74,6 @@ func buildPermFromCycleRep(parts []int, max int) (*Perm, error) {
 			}
 		}
 	}
-	// fmt.Printf("%s -> %#v, %#v\n", from, parts, perm.elements)
 	return perm, nil
 }
 
