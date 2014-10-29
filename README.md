@@ -11,6 +11,7 @@ This package provides simple calculations with permutations:
 * signature
 * sign
 * order
+* equality tests
 * conversion from/to cyclic form
 
 INSTALL

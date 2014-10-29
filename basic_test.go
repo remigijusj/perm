@@ -94,3 +94,48 @@ func (s *MySuite) TestPower(c *C) {
 	c.Assert(e, IsNil)
 	c.Check(p.Power(2).String(), Equals, "[2 3 4 5 0 1]")
 }
+
+func (s *MySuite) TestIsIdentity(c *C) {
+	var p *Perm
+	var e error
+
+	p, e = NewPerm([]int{})
+	c.Assert(e, IsNil)
+	c.Check(p.IsIdentity(), Equals, true)
+
+	p, e = NewPerm([]int{0, 1})
+	c.Assert(e, IsNil)
+	c.Check(p.IsIdentity(), Equals, true)
+
+	p, e = NewPerm([]int{0, 1, 2})
+	c.Assert(e, IsNil)
+	c.Check(p.IsIdentity(), Equals, true)
+
+	p, e = NewPerm([]int{1, 0})
+	c.Assert(e, IsNil)
+	c.Check(p.IsIdentity(), Equals, false)
+
+	p, e = NewPerm([]int{0, 1, 3, 2})
+	c.Assert(e, IsNil)
+	c.Check(p.IsIdentity(), Equals, false)
+}
+
+func (s *MySuite) TestIsEqual(c *C) {
+	var p, q *Perm
+	var e, r error
+
+	p, e = NewPerm([]int{})
+	c.Assert(e, IsNil)
+	c.Check(p.IsEqual(p), Equals, true)
+
+	p, e = NewPerm([]int{0})
+	c.Assert(e, IsNil)
+	c.Check(p.IsEqual(p), Equals, true)
+
+	p, e = NewPerm([]int{0, 1})
+	q, r = NewPerm([]int{0, 1, 2})
+	c.Assert(e, IsNil)
+	c.Assert(r, IsNil)
+	c.Check(p.IsEqual(q), Equals, true)
+	c.Check(q.IsEqual(p), Equals, true)
+}

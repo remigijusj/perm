@@ -109,6 +109,19 @@ func (p *Perm) Power(n int) *Perm {
 	return &Perm{elements}
 }
 
+func (p *Perm) IsIdentity() bool {
+	for i, v := range p.elements {
+		if int(v) != i {
+			return false
+		}
+	}
+	return true
+}
+
+func (p *Perm) IsEqual(q *Perm) bool {
+	return p.Compose(q.Inverse()).IsIdentity()
+}
+
 // helpers
 
 func validSlice(from []int) bool {
