@@ -45,9 +45,9 @@ func (p *Perm) Order() int {
 	}
 	sgn := p.Signature()
 	ord := 1
-	for i, v := range sgn[2:] {
-		if v > 0 {
-			ord = lcm(ord, i+2)
+	for i, v := range sgn {
+		if v > 0 && i >= 2 {
+			ord = lcm(ord, i)
 		}
 	}
 	return ord

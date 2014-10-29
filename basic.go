@@ -3,6 +3,7 @@ package perm
 import (
 	"errors"
 	"fmt"
+	"math/rand"
 	"sort"
 )
 
@@ -34,6 +35,13 @@ func Identity(size int) (*Perm, error) {
 		elements[i] = dot(i)
 	}
 	return &Perm{elements}, nil
+}
+
+func Random(size int) (*Perm, error) {
+	if size < 0 || size > TOP_LEN {
+		return nil, errors.New("invalid identity size")
+	}
+	return NewPerm(rand.Perm(size))
 }
 
 func (p *Perm) String() string {

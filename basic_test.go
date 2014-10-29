@@ -46,6 +46,12 @@ func (s *MySuite) TestIdentityValid(c *C) {
 	c.Check(p.String(), Equals, "[0 1 2]")
 }
 
+func (s *MySuite) TestRandom(c *C) {
+	p, e := Random(128)
+	c.Assert(e, IsNil)
+	c.Check(p.Size(), Equals, 128)
+}
+
 func (s *MySuite) TestString(c *C) {
 	p, e := NewPerm([]int{1, 0, 2})
 	c.Assert(e, IsNil)
