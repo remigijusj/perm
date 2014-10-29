@@ -37,6 +37,10 @@ func (s *MySuite) TestParseCyclesValid(c *C) {
 	c.Assert(e, IsNil)
 	c.Check(p.String(), Equals, "[1 0]")
 
+	p, e = ParseCycles("(3,5)")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[0 1 4 3 2]")
+
 	p, e = ParseCycles("(1, 2) (3, 4) ")
 	c.Assert(e, IsNil)
 	c.Check(p.String(), Equals, "[1 0 3 2]")
@@ -57,7 +61,7 @@ func (s *MySuite) TestPrintCycles(c *C) {
 
 	p, e = NewPerm([]int{0})
 	c.Assert(e, IsNil)
-	c.Check(p.PrintCycles(), Equals, "(1)")
+	c.Check(p.PrintCycles(), Equals, "()")
 
 	p, e = NewPerm([]int{1, 2, 3, 4, 5, 0})
 	c.Assert(e, IsNil)
@@ -70,4 +74,8 @@ func (s *MySuite) TestPrintCycles(c *C) {
 	p, e = NewPerm([]int{5, 4, 3, 2, 1, 0})
 	c.Assert(e, IsNil)
 	c.Check(p.PrintCycles(), Equals, "(1, 6)(2, 5)(3, 4)")
+
+	p, e = NewPerm([]int{0, 1, 4, 3, 2, 5})
+	c.Assert(e, IsNil)
+	c.Check(p.PrintCycles(), Equals, "(3, 5)")
 }

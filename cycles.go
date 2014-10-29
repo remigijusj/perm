@@ -110,7 +110,9 @@ func (p *Perm) getCycles() [][]dot {
 			marks[j] = true
 			cycle = append(cycle, j)
 		}
-		cycles = append(cycles, cycle)
+		if len(cycle) > 1 {
+			cycles = append(cycles, cycle)
+		}
 	}
 	// exceptional case: empty
 	if len(cycles) == 0 {

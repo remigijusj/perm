@@ -1,5 +1,6 @@
 package perm
 
+// TODO: uint16?
 func (p *Perm) Signature() []int {
 	size := len(p.elements)
 	sign := make([]int, size+1)
