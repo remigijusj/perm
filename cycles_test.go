@@ -49,9 +49,13 @@ func (s *MySuite) TestParseCyclesValid(c *C) {
 	c.Assert(e, IsNil)
 	c.Check(p.String(), Equals, "[1 0 11 3 4 5 15 7 8 9 10 2 12 13 14 6]")
 
-	p, e = ParseCycles("(1 2)(3, 8)(7 4)()")
-	c.Check(e, IsNil)
+	p, e = ParseCycles("(1 2 ; 3, 8 ; 7 4 ()")
+	c.Assert(e, IsNil)
 	c.Check(p.String(), Equals, "[1 0 7 6 4 5 3 2]")
+
+	p, e = ParseCycles("7 9 11 13)(6 10 12 8")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[0 1 2 3 4 9 8 5 10 11 12 7 6]")
 }
 
 func (s *MySuite) TestPrintCycles(c *C) {

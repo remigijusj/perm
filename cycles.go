@@ -21,7 +21,7 @@ func ParseCycles(from string) (*Perm, error) {
 // scan integers, liberally
 // ex: (1 2)(3, 8)(7 4)() -> []int{-1, 0, 1, -1, 2, 7, -1, 6, 3, -1}
 func scanCycleRep(from string) ([]int, int, error) {
-	rx := regexp.MustCompile(`\d+|[()]+`)
+	rx := regexp.MustCompile(`\d+|[();]+`)
 	items := rx.FindAllString(from, -1)
 	parts := []int{}
 	max := -1
@@ -37,6 +37,10 @@ func scanCycleRep(from string) ([]int, int, error) {
 		if part > max {
 			max = part
 		}
+	}
+	// must end in -1
+	if parts[len(parts)-1] != -1 {
+		parts = append(parts, -1)
 	}
 	return parts, max, nil
 }
@@ -56,8 +60,8 @@ func buildPermFromCycleRep(parts []int, max int) (*Perm, error) {
 					return nil, errors.New("integers must be unique")
 				}
 				perm.elements[point] = dot(first)
+				first, point = -1, -1
 			}
-			first, point = -1, -1
 		} else {
 			if point == -1 {
 				first, point = part, part
@@ -74,6 +78,7 @@ func buildPermFromCycleRep(parts []int, max int) (*Perm, error) {
 	return perm, nil
 }
 
+// TODO: more efficient serialization?
 func (p *Perm) PrintCycles() string {
 	cycles := p.getCycles()
 	var buf bytes.Buffer
