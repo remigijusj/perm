@@ -101,45 +101,7 @@ func (p *Perm) Power(n int) *Perm {
 	return &Perm{elements}
 }
 
-func (p *Perm) Signature() []int {
-	size := len(p.elements)
-	sign := make([]int, size+1)
-
-	marks := make([]bool, size)
-	m := 0
-	for {
-		// find next unmarked
-		for m < size && marks[m] {
-			m++
-		}
-		if m == size {
-			break
-		}
-		// trace a cycle
-		cnt := 0
-		for j := dot(m); !marks[j]; j = p.elements[j] {
-			marks[j] = true
-			cnt++
-		}
-		sign[cnt]++
-	}
-	return sign
-}
-
-func (p *Perm) Sign() int {
-  sgn := p.Signature()
-  sum := 0
-  for i := 2; i < len(sgn); i += 2 {
-    sum += sgn[i]
-  }
-  if sum % 2 == 0 {
-    return 1
-  } else {
-    return -1
-  }
-}
-
-// general helpers
+// helpers
 
 func validSlice(from []int) bool {
 	check := make([]int, len(from))

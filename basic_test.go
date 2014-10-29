@@ -88,38 +88,3 @@ func (s *MySuite) TestPower(c *C) {
 	c.Assert(e, IsNil)
 	c.Check(p.Power(2).String(), Equals, "[2 3 4 5 0 1]")
 }
-
-func (s *MySuite) TestSignatureSign(c *C) {
-	var p *Perm
-	var e error
-
-	p, e = NewPerm([]int{})
-	c.Assert(e, IsNil)
-	c.Check(p.Signature(), DeepEquals, []int{0})
-	c.Check(p.Sign(), Equals, 1)
-
-	p, e = NewPerm([]int{0})
-	c.Assert(e, IsNil)
-	c.Check(p.Signature(), DeepEquals, []int{0, 1})
-	c.Check(p.Sign(), Equals, 1)
-
-	p, e = NewPerm([]int{1, 0})
-	c.Assert(e, IsNil)
-	c.Check(p.Signature(), DeepEquals, []int{0, 0, 1})
-	c.Check(p.Sign(), Equals, -1)
-
-	p, e = NewPerm([]int{1, 0, 3, 2, 4})
-	c.Assert(e, IsNil)
-	c.Check(p.Signature(), DeepEquals, []int{0, 1, 2, 0, 0, 0})
-	c.Check(p.Sign(), Equals, 1)
-
-	p, e = NewPerm([]int{0, 1, 3, 4, 2})
-	c.Assert(e, IsNil)
-	c.Check(p.Signature(), DeepEquals, []int{0, 2, 0, 1, 0, 0})
-	c.Check(p.Sign(), Equals, 1)
-
-	p, e = NewPerm([]int{1, 2, 3, 4, 5, 0})
-	c.Assert(e, IsNil)
-	c.Check(p.Signature(), DeepEquals, []int{0, 0, 0, 0, 0, 0, 1})
-	c.Check(p.Sign(), Equals, -1)
-}
