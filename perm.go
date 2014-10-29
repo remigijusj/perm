@@ -93,22 +93,18 @@ func (p *Perm) Power(n int) *Perm {
 	return &Perm{elements}
 }
 
-// TODO: optimize
 func (p *Perm) Signature() []int {
 	size := len(p.elements)
 	sign := make([]int, size+1)
 
 	marks := make([]bool, size)
+	m := 0
 	for {
-		// find first unmarked
-		m := -1
-		for i := 0; i < size; i++ {
-			if !marks[i] {
-				m = i
-				break
-			}
+		// find next unmarked
+		for m < size && marks[m] {
+			m++
 		}
-		if m == -1 {
+		if m == size {
 			break
 		}
 		// trace a cycle
