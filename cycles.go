@@ -42,27 +42,30 @@ func scanCycleRep(from string) ([]int, int, error) {
 }
 
 // build permutation
-// ex: []int{-1, 0, 1, -1, 2, 7, -1, 6, 3, -1} -> []int{1, 0, 7, 6, 4, 5, 3, 2}
+// ex: []int{-1, 0, 1, -1, 2, 7, -1, 6, 3, -1} -> []dot{1, 0, 7, 6, 4, 5, 3, 2}
 func buildPermFromCycleRep(parts []int, max int) (*Perm, error) {
-	perm := Identity(max + 1)
+	perm, err := Identity(max + 1)
+	if err != nil {
+		return nil, err
+	}
 	first, point := -1, -1
 	for _, part := range parts {
 		if part == -1 {
 			if first >= 0 && point >= 0 {
-				if perm.elements[point] != point {
+				if int(perm.elements[point]) != point {
 					return nil, errors.New("integers must be unique")
 				}
-				perm.elements[point] = first
+				perm.elements[point] = dot(first)
 			}
 			first, point = -1, -1
 		} else {
 			if point == -1 {
 				first, point = part, part
 			} else {
-				if perm.elements[point] != point {
+				if int(perm.elements[point]) != point {
 					return nil, errors.New("integers must be unique")
 				}
-				perm.elements[point] = part
+				perm.elements[point] = dot(part)
 				point = part
 			}
 		}
@@ -87,9 +90,9 @@ func (p *Perm) PrintCycles() string {
 	return buf.String()
 }
 
-func (p *Perm) getCycles() [][]int {
+func (p *Perm) getCycles() [][]dot {
 	size := len(p.elements)
-	cycles := make([][]int, 0, 1)
+	cycles := make([][]dot, 0, 1)
 	marks := make([]bool, size)
 	for {
 		// find first unmarked
@@ -104,8 +107,8 @@ func (p *Perm) getCycles() [][]int {
 			break
 		}
 		// construct a cycle
-		cycle := make([]int, 0, 1)
-		for j := m; !marks[j]; j = p.elements[j] {
+		cycle := make([]dot, 0, 1)
+		for j := dot(m); !marks[j]; j = p.elements[j] {
 			marks[j] = true
 			cycle = append(cycle, j)
 		}
@@ -113,7 +116,7 @@ func (p *Perm) getCycles() [][]int {
 	}
 	// exceptional case: empty
 	if len(cycles) == 0 {
-		cycles = append(cycles, []int{})
+		cycles = append(cycles, []dot{})
 	}
 	return cycles
 }

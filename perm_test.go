@@ -21,6 +21,9 @@ func (s *MySuite) TestNewPerm(c *C) {
 	_, e = NewPerm([]int{0, 0, 1})
 	c.Check(e, NotNil)
 
+	_, e = NewPerm([]int{-2, 0, 1})
+	c.Check(e, NotNil)
+
 	_, e = NewPerm([]int{0, 2, 3})
 	c.Check(e, NotNil)
 
@@ -29,7 +32,14 @@ func (s *MySuite) TestNewPerm(c *C) {
 }
 
 func (s *MySuite) TestIdentity(c *C) {
-	p := Identity(3)
+	p, e := Identity(-1)
+	c.Check(e, NotNil)
+
+	p, e = Identity(1<<16 + 1)
+	c.Check(e, NotNil)
+
+	p, e = Identity(3)
+	c.Check(e, IsNil)
 	c.Check(p.Size(), Equals, 3)
 	c.Check(p.String(), Equals, "[0 1 2]")
 }

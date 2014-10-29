@@ -6,23 +6,34 @@ import (
 	"sort"
 )
 
+const TOP_LEN = 1 << 16
+
+type dot uint16
+
 type Perm struct {
-	elements []int
+	elements []dot
 }
 
 func NewPerm(from []int) (*Perm, error) {
+	if len(from) > TOP_LEN {
+		return nil, errors.New("constructing list too long")
+	}
 	if !validSlice(from) {
 		return nil, errors.New("invalid constructing list")
 	}
-	return &Perm{copySlice(from)}, nil
+	elements := convertSlice(from)
+	return &Perm{elements}, nil
 }
 
-func Identity(size int) *Perm {
-	elements := make([]int, size)
-	for i := 0; i < size; i++ {
-		elements[i] = i
+func Identity(size int) (*Perm, error) {
+	if size < 0 || size > TOP_LEN {
+		return nil, errors.New("invalid identity size")
 	}
-	return &Perm{elements}
+	elements := make([]dot, size)
+	for i := 0; i < size; i++ {
+		elements[i] = dot(i)
+	}
+	return &Perm{elements}, nil
 }
 
 func (p *Perm) String() string {
@@ -35,43 +46,45 @@ func (p *Perm) Size() int {
 
 func (p *Perm) On(i int) int {
 	if i >= 0 && i < len(p.elements) {
-		return p.elements[i]
+		return int(p.elements[i])
 	} else {
 		return i
 	}
 }
 
 func (p *Perm) Inverse() *Perm {
-	elements := make([]int, len(p.elements))
+	elements := make([]dot, len(p.elements))
 	for i := 0; i < len(elements); i++ {
-		elements[p.elements[i]] = i
+		elements[p.elements[i]] = dot(i)
 	}
 	return &Perm{elements}
 }
 
+// TODO: avoid double "On" usage?
 func (p *Perm) Compose(o *Perm) *Perm {
 	size := len(p.elements)
 	osize := len(o.elements)
 	if osize > size {
 		size = osize
 	}
-	elements := make([]int, size)
+	elements := make([]dot, size)
 	for i := 0; i < len(elements); i++ {
-		elements[i] = o.On(p.On(i))
+		elements[i] = dot(o.On(p.On(i)))
 	}
 	return &Perm{elements}
 }
 
 func (p *Perm) Power(n int) *Perm {
 	if n == 0 {
-		return Identity(len(p.elements))
+		o, _ := Identity(len(p.elements))
+		return o
 	}
 	if n < 0 {
 		return p.Inverse().Power(-n)
 	}
-	elements := make([]int, len(p.elements))
+	elements := make([]dot, len(p.elements))
 	for i := 0; i < len(elements); i++ {
-		j := i
+		j := dot(i)
 		for k := 0; k < n; k++ {
 			j = p.elements[j]
 		}
@@ -80,6 +93,7 @@ func (p *Perm) Power(n int) *Perm {
 	return &Perm{elements}
 }
 
+// TODO: optimize
 func (p *Perm) Signature() []int {
 	size := len(p.elements)
 	sign := make([]int, size+1)
@@ -99,7 +113,7 @@ func (p *Perm) Signature() []int {
 		}
 		// trace a cycle
 		cnt := 0
-		for j := m; !marks[j]; j = p.elements[j] {
+		for j := dot(m); !marks[j]; j = p.elements[j] {
 			marks[j] = true
 			cnt++
 		}
@@ -111,7 +125,8 @@ func (p *Perm) Signature() []int {
 // general helpers
 
 func validSlice(from []int) bool {
-	check := copySlice(from)
+	check := make([]int, len(from))
+	copy(check, from)
 	sort.Ints(check)
 	for i := 0; i < len(check); i++ {
 		if check[i] != i {
@@ -121,8 +136,10 @@ func validSlice(from []int) bool {
 	return true
 }
 
-func copySlice(from []int) []int {
-	to := make([]int, len(from))
-	copy(to, from)
+func convertSlice(from []int) []dot {
+	to := make([]dot, len(from))
+	for i := 0; i < len(from); i++ {
+		to[i] = dot(from[i])
+	}
 	return to
 }
