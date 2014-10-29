@@ -60,16 +60,24 @@ func (p *Perm) Inverse() *Perm {
 	return &Perm{elements}
 }
 
-// TODO: avoid double "On" usage?
-func (p *Perm) Compose(o *Perm) *Perm {
-	size := len(p.elements)
-	osize := len(o.elements)
-	if osize > size {
-		size = osize
+func (p *Perm) Compose(q *Perm) *Perm {
+	var elements []dot
+	psize := dot(len(p.elements))
+	qsize := dot(len(q.elements))
+	if psize > qsize {
+		elements = make([]dot, psize)
+	} else {
+		elements = make([]dot, qsize)
 	}
-	elements := make([]dot, size)
 	for i := 0; i < len(elements); i++ {
-		elements[i] = dot(o.On(p.On(i)))
+		k := dot(i)
+		if k < psize {
+			k = p.elements[k]
+		}
+		if k < qsize {
+			k = q.elements[k]
+		}
+		elements[i] = k
 	}
 	return &Perm{elements}
 }
