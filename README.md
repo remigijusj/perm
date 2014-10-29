@@ -7,6 +7,8 @@ This package provides simple calculations with permutations:
 * inverse
 * composition
 * power
+* signature
+* sign
 * conversion from/to cyclic form
 
 INSTALL

@@ -126,6 +126,19 @@ func (p *Perm) Signature() []int {
 	return sign
 }
 
+func (p *Perm) Sign() int {
+  sgn := p.Signature()
+  sum := 0
+  for i := 2; i < len(sgn); i += 2 {
+    sum += sgn[i]
+  }
+  if sum % 2 == 0 {
+    return 1
+  } else {
+    return -1
+  }
+}
+
 // general helpers
 
 func validSlice(from []int) bool {
