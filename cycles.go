@@ -39,7 +39,7 @@ func scanCycleRep(from string) ([]int, int, error) {
 		}
 	}
 	// must end in -1
-	if parts[len(parts)-1] != -1 {
+	if len(parts) == 0 || parts[len(parts)-1] != -1 {
 		parts = append(parts, -1)
 	}
 	return parts, max, nil

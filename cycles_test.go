@@ -21,6 +21,10 @@ func (s *S) TestParseCyclesValid(c *C) {
 	var p Perm
 	var e error
 
+	p, e = ParseCycles("")
+	c.Assert(e, IsNil)
+	c.Check(p.String(), Equals, "[]")
+
 	p, e = ParseCycles("()")
 	c.Assert(e, IsNil)
 	c.Check(p.String(), Equals, "[]")
