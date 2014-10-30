@@ -54,6 +54,33 @@ func (p Perm) Order() int {
 	return ord
 }
 
+// TODO: support more n
+func (p Perm) OrderToCycle(n int) int {
+	if n < 2 || n > 3 {
+		return -1
+	}
+	sgn := p.Signature()
+	// there must be unique n-cycle
+	if sgn[n] != 1 {
+		return -1
+	}
+	pow := 1
+	for i, v := range sgn {
+		if i%n == 0 {
+			// no cycles which could reduce to n
+			if i > n && v > 0 {
+				return -1
+			}
+		} else {
+			// contributes to power
+			if i >= 2 && v > 0 {
+				pow = lcm(pow, i)
+			}
+		}
+	}
+	return pow
+}
+
 // TODO: int64?
 func lcm(a, b int) int {
 	return a * (b / gcd(a, b))

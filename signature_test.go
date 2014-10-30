@@ -59,3 +59,26 @@ func (s *S) TestSign6b(c *C) {
 	c.Check(p.Sign(), Equals, -1)
 	c.Check(p.Order(), Equals, 6)
 }
+
+func (s *S) TestOrderToCycle1(c *C) {
+	p, e := NewPerm([]int{1, 0})
+	c.Assert(e, IsNil)
+	k := p.OrderToCycle(2)
+	c.Check(k, Equals, 1)
+}
+
+func (s *S) TestOrderToCycle2(c *C) {
+	p, e := NewPerm([]int{1, 0, 3, 2})
+	c.Assert(e, IsNil)
+	k := p.OrderToCycle(2)
+	c.Check(k, Equals, -1)
+}
+
+func (s *S) TestOrderToCycle3(c *C) {
+	p, e := NewPerm([]int{1, 0, 3, 4, 2})
+	c.Assert(e, IsNil)
+	k := p.OrderToCycle(2)
+	c.Check(k, Equals, 3)
+	k = p.OrderToCycle(3)
+	c.Check(k, Equals, 2)
+}
