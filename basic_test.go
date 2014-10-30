@@ -83,16 +83,47 @@ func (s *MySuite) TestInverse(c *C) {
 
 func (s *MySuite) TestCompose(c *C) {
 	p, e1 := NewPerm([]int{1, 2, 0})
-	r, e2 := NewPerm([]int{0, 3, 4, 1, 2})
+	q, e2 := NewPerm([]int{0, 3, 4, 1, 2})
 	c.Assert(e1, IsNil)
 	c.Assert(e2, IsNil)
-	c.Check(p.Compose(r).String(), Equals, "[3 4 0 1 2]")
+	c.Check(p.Compose(q).String(), Equals, "[3 4 0 1 2]")
 }
 
 func (s *MySuite) TestPower(c *C) {
 	p, e := NewPerm([]int{1, 2, 3, 4, 5, 0})
 	c.Assert(e, IsNil)
 	c.Check(p.Power(2).String(), Equals, "[2 3 4 5 0 1]")
+}
+
+func (s *MySuite) TestConjugate0(c *C) {
+	var p, q *Perm
+	var e error
+
+	p, _ = Identity(6)
+	q, e = Random(12)
+	c.Assert(e, IsNil)
+	c.Check(p.Conjugate(q).IsIdentity(), Equals, true)
+
+	p, e = Random(6)
+	q, _ = Identity(8)
+	c.Assert(e, IsNil)
+	c.Check(p.Conjugate(q).IsEqual(p), Equals, true)
+}
+
+func (s *MySuite) TestConjugate1(c *C) {
+	p, e1 := NewPerm([]int{1, 2, 0})
+	q, e2 := NewPerm([]int{0, 3, 4, 1, 2})
+	c.Assert(e1, IsNil)
+	c.Assert(e2, IsNil)
+	c.Check(p.Conjugate(q).String(), Equals, "[3 1 2 4 0]")
+}
+
+func (s *MySuite) TestConjugate2(c *C) {
+	p, e1 := NewPerm([]int{4, 2, 0, 1, 3})
+	q, e2 := NewPerm([]int{1, 2, 0})
+	c.Assert(e1, IsNil)
+	c.Assert(e2, IsNil)
+	c.Check(p.Conjugate(q).String(), Equals, "[1 4 0 2 3]")
 }
 
 func (s *MySuite) TestIsIdentity(c *C) {

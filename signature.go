@@ -41,7 +41,7 @@ func (p *Perm) Sign() int {
 
 // TODO: binary reduce?
 func (p *Perm) Order() int {
-	if p.Size() < 2 {
+	if len(p.elements) < 2 {
 		return 1
 	}
 	sgn := p.Signature()

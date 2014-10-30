@@ -8,6 +8,7 @@ This package provides simple calculations with permutations:
 * inverse
 * composition
 * power
+* conjugate
 * signature
 * sign
 * order

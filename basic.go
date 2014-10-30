@@ -41,7 +41,9 @@ func Random(size int) (*Perm, error) {
 	if size < 0 || size > TOP_LEN {
 		return nil, errors.New("invalid identity size")
 	}
-	return NewPerm(rand.Perm(size))
+	random := rand.Perm(size)
+	elements := convertSlice(random)
+	return &Perm{elements}, nil
 }
 
 func (p *Perm) String() string {
@@ -109,6 +111,32 @@ func (p *Perm) Power(n int) *Perm {
 	return &Perm{elements}
 }
 
+func (p *Perm) Conjugate(q *Perm) *Perm {
+	var elements []dot
+	psize := dot(len(p.elements))
+	qsize := dot(len(q.elements))
+	if psize > qsize {
+		elements = make([]dot, psize)
+	} else {
+		elements = make([]dot, qsize)
+	}
+	for i := 0; i < len(elements); i++ {
+		k := dot(i)
+		j := int(i)
+		if k < qsize {
+			j = int(q.elements[i])
+		}
+		if k < psize {
+			k = p.elements[k]
+		}
+		if k < qsize {
+			k = q.elements[k]
+		}
+		elements[j] = k
+	}
+	return &Perm{elements}
+}
+
 func (p *Perm) IsIdentity() bool {
 	for i, v := range p.elements {
 		if int(v) != i {
@@ -119,7 +147,23 @@ func (p *Perm) IsIdentity() bool {
 }
 
 func (p *Perm) IsEqual(q *Perm) bool {
-	return p.Compose(q.Inverse()).IsIdentity()
+	a, b := p, q
+	if len(b.elements) > len(a.elements) {
+		a, b = b, a
+	}
+	lim := len(b.elements)
+	for i, v := range a.elements {
+		if i < lim {
+			if v != b.elements[i] {
+				return false
+			}
+		} else {
+			if int(v) != i {
+				return false
+			}
+		}
+	}
+	return true
 }
 
 // helpers
