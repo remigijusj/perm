@@ -4,7 +4,7 @@ import (
 	. "gopkg.in/check.v1"
 )
 
-func (s *MySuite) TestParseCyclesInvalid(c *C) {
+func (s *S) TestParseCyclesInvalid(c *C) {
 	var e error
 
 	_, e = ParseCycles("(1 2 3 0)")
@@ -17,7 +17,7 @@ func (s *MySuite) TestParseCyclesInvalid(c *C) {
 	c.Check(e, NotNil)
 }
 
-func (s *MySuite) TestParseCyclesValid(c *C) {
+func (s *S) TestParseCyclesValid(c *C) {
 	var p *Perm
 	var e error
 
@@ -58,7 +58,7 @@ func (s *MySuite) TestParseCyclesValid(c *C) {
 	c.Check(p.String(), Equals, "[0 1 2 3 4 9 8 5 10 11 12 7 6]")
 }
 
-func (s *MySuite) TestPrintCycles(c *C) {
+func (s *S) TestPrintCycles(c *C) {
 	p, e := NewPerm([]int{})
 	c.Assert(e, IsNil)
 	c.Check(p.PrintCycles(), Equals, "()")

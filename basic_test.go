@@ -8,11 +8,11 @@ import (
 // hook up gocheck into the "go test" runner
 func Test(t *testing.T) { TestingT(t) }
 
-type MySuite struct{}
+type S struct{}
 
-var _ = Suite(&MySuite{})
+var _ = Suite(&S{})
 
-func (s *MySuite) TestNewPerm(c *C) {
+func (s *S) TestNewPerm(c *C) {
 	var e error
 
 	_, e = NewPerm([]int{1, 2, 3})
@@ -31,7 +31,7 @@ func (s *MySuite) TestNewPerm(c *C) {
 	c.Check(e, IsNil)
 }
 
-func (s *MySuite) TestIdentityInvalid(c *C) {
+func (s *S) TestIdentityInvalid(c *C) {
 	_, e := Identity(-1)
 	c.Check(e, NotNil)
 
@@ -39,32 +39,32 @@ func (s *MySuite) TestIdentityInvalid(c *C) {
 	c.Check(e, NotNil)
 }
 
-func (s *MySuite) TestIdentityValid(c *C) {
+func (s *S) TestIdentityValid(c *C) {
 	p, e := Identity(3)
 	c.Assert(e, IsNil)
 	c.Check(p.Size(), Equals, 3)
 	c.Check(p.String(), Equals, "[0 1 2]")
 }
 
-func (s *MySuite) TestRandom(c *C) {
+func (s *S) TestRandom(c *C) {
 	p, e := Random(128)
 	c.Assert(e, IsNil)
 	c.Check(p.Size(), Equals, 128)
 }
 
-func (s *MySuite) TestString(c *C) {
+func (s *S) TestString(c *C) {
 	p, e := NewPerm([]int{1, 0, 2})
 	c.Assert(e, IsNil)
 	c.Check(p.String(), Equals, "[1 0 2]")
 }
 
-func (s *MySuite) TestSize(c *C) {
+func (s *S) TestSize(c *C) {
 	p, e := NewPerm([]int{1, 3, 2, 0})
 	c.Assert(e, IsNil)
 	c.Check(p.Size(), Equals, 4)
 }
 
-func (s *MySuite) TestOn(c *C) {
+func (s *S) TestOn(c *C) {
 	p, e := NewPerm([]int{1, 4, 2, 0, 3})
 	c.Assert(e, IsNil)
 	c.Check(p.On(0), Equals, 1)
@@ -75,13 +75,13 @@ func (s *MySuite) TestOn(c *C) {
 	c.Check(p.On(5), Equals, 5)
 }
 
-func (s *MySuite) TestInverse(c *C) {
+func (s *S) TestInverse(c *C) {
 	p, e := NewPerm([]int{1, 2, 3, 4, 0})
 	c.Assert(e, IsNil)
 	c.Check(p.Inverse().String(), Equals, "[4 0 1 2 3]")
 }
 
-func (s *MySuite) TestCompose(c *C) {
+func (s *S) TestCompose(c *C) {
 	p, e1 := NewPerm([]int{1, 2, 0})
 	q, e2 := NewPerm([]int{0, 3, 4, 1, 2})
 	c.Assert(e1, IsNil)
@@ -89,13 +89,13 @@ func (s *MySuite) TestCompose(c *C) {
 	c.Check(p.Compose(q).String(), Equals, "[3 4 0 1 2]")
 }
 
-func (s *MySuite) TestPower(c *C) {
+func (s *S) TestPower(c *C) {
 	p, e := NewPerm([]int{1, 2, 3, 4, 5, 0})
 	c.Assert(e, IsNil)
 	c.Check(p.Power(2).String(), Equals, "[2 3 4 5 0 1]")
 }
 
-func (s *MySuite) TestConjugate0(c *C) {
+func (s *S) TestConjugate0(c *C) {
 	var p, q *Perm
 	var e error
 
@@ -110,7 +110,7 @@ func (s *MySuite) TestConjugate0(c *C) {
 	c.Check(p.Conjugate(q).IsEqual(p), Equals, true)
 }
 
-func (s *MySuite) TestConjugate1(c *C) {
+func (s *S) TestConjugate1(c *C) {
 	p, e1 := NewPerm([]int{1, 2, 0})
 	q, e2 := NewPerm([]int{0, 3, 4, 1, 2})
 	c.Assert(e1, IsNil)
@@ -118,7 +118,7 @@ func (s *MySuite) TestConjugate1(c *C) {
 	c.Check(p.Conjugate(q).String(), Equals, "[3 1 2 4 0]")
 }
 
-func (s *MySuite) TestConjugate2(c *C) {
+func (s *S) TestConjugate2(c *C) {
 	p, e1 := NewPerm([]int{4, 2, 0, 1, 3})
 	q, e2 := NewPerm([]int{1, 2, 0})
 	c.Assert(e1, IsNil)
@@ -126,7 +126,7 @@ func (s *MySuite) TestConjugate2(c *C) {
 	c.Check(p.Conjugate(q).String(), Equals, "[1 4 0 2 3]")
 }
 
-func (s *MySuite) TestIsIdentity(c *C) {
+func (s *S) TestIsIdentity(c *C) {
 	var p *Perm
 	var e error
 
@@ -151,7 +151,7 @@ func (s *MySuite) TestIsIdentity(c *C) {
 	c.Check(p.IsIdentity(), Equals, false)
 }
 
-func (s *MySuite) TestIsEqual(c *C) {
+func (s *S) TestIsEqual(c *C) {
 	var p, q *Perm
 	var e, r error
 
