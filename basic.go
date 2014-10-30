@@ -15,46 +15,46 @@ type Perm struct {
 	elements []dot
 }
 
-func NewPerm(from []int) (*Perm, error) {
+func NewPerm(from []int) (Perm, error) {
 	if len(from) > TOP_LEN {
-		return nil, errors.New("constructing list too long")
+		return Perm{}, errors.New("constructing list too long")
 	}
 	if !validSlice(from) {
-		return nil, errors.New("invalid constructing list")
+		return Perm{}, errors.New("invalid constructing list")
 	}
 	elements := convertSlice(from)
-	return &Perm{elements}, nil
+	return Perm{elements}, nil
 }
 
-func Identity(size int) (*Perm, error) {
+func Identity(size int) (Perm, error) {
 	if size < 0 || size > TOP_LEN {
-		return nil, errors.New("invalid identity size")
+		return Perm{}, errors.New("invalid identity size")
 	}
 	elements := make([]dot, size)
 	for i := 0; i < size; i++ {
 		elements[i] = dot(i)
 	}
-	return &Perm{elements}, nil
+	return Perm{elements}, nil
 }
 
-func Random(size int) (*Perm, error) {
+func Random(size int) (Perm, error) {
 	if size < 0 || size > TOP_LEN {
-		return nil, errors.New("invalid identity size")
+		return Perm{}, errors.New("invalid identity size")
 	}
 	random := rand.Perm(size)
 	elements := convertSlice(random)
-	return &Perm{elements}, nil
+	return Perm{elements}, nil
 }
 
-func (p *Perm) String() string {
+func (p Perm) String() string {
 	return fmt.Sprintf("%v", p.elements)
 }
 
-func (p *Perm) Size() int {
+func (p Perm) Size() int {
 	return len(p.elements)
 }
 
-func (p *Perm) On(i int) int {
+func (p Perm) On(i int) int {
 	if i >= 0 && i < len(p.elements) {
 		return int(p.elements[i])
 	} else {
@@ -62,15 +62,15 @@ func (p *Perm) On(i int) int {
 	}
 }
 
-func (p *Perm) Inverse() *Perm {
+func (p Perm) Inverse() Perm {
 	elements := make([]dot, len(p.elements))
 	for i := 0; i < len(elements); i++ {
 		elements[p.elements[i]] = dot(i)
 	}
-	return &Perm{elements}
+	return Perm{elements}
 }
 
-func (p *Perm) Compose(q *Perm) *Perm {
+func (p Perm) Compose(q Perm) Perm {
 	var elements []dot
 	psize := dot(len(p.elements))
 	qsize := dot(len(q.elements))
@@ -89,10 +89,10 @@ func (p *Perm) Compose(q *Perm) *Perm {
 		}
 		elements[i] = k
 	}
-	return &Perm{elements}
+	return Perm{elements}
 }
 
-func (p *Perm) Power(n int) *Perm {
+func (p Perm) Power(n int) Perm {
 	if n == 0 {
 		o, _ := Identity(len(p.elements))
 		return o
@@ -108,10 +108,10 @@ func (p *Perm) Power(n int) *Perm {
 		}
 		elements[i] = j
 	}
-	return &Perm{elements}
+	return Perm{elements}
 }
 
-func (p *Perm) Conjugate(q *Perm) *Perm {
+func (p Perm) Conjugate(q Perm) Perm {
 	var elements []dot
 	psize := dot(len(p.elements))
 	qsize := dot(len(q.elements))
@@ -134,10 +134,10 @@ func (p *Perm) Conjugate(q *Perm) *Perm {
 		}
 		elements[j] = k
 	}
-	return &Perm{elements}
+	return Perm{elements}
 }
 
-func (p *Perm) IsIdentity() bool {
+func (p Perm) IsIdentity() bool {
 	for i, v := range p.elements {
 		if int(v) != i {
 			return false
@@ -146,7 +146,7 @@ func (p *Perm) IsIdentity() bool {
 	return true
 }
 
-func (p *Perm) IsEqual(q *Perm) bool {
+func (p Perm) IsEqual(q Perm) bool {
 	a, b := p, q
 	if len(b.elements) > len(a.elements) {
 		a, b = b, a

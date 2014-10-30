@@ -9,10 +9,10 @@ import (
 
 // cycle representation
 
-func ParseCycles(from string) (*Perm, error) {
+func ParseCycles(from string) (Perm, error) {
 	parts, max, err := scanCycleRep(from)
 	if err != nil {
-		return nil, err
+		return Perm{}, err
 	}
 	perm, err := buildPermFromCycleRep(parts, max)
 	return perm, err
@@ -47,17 +47,17 @@ func scanCycleRep(from string) ([]int, int, error) {
 
 // build permutation
 // ex: []int{-1, 0, 1, -1, 2, 7, -1, 6, 3, -1} -> []dot{1, 0, 7, 6, 4, 5, 3, 2}
-func buildPermFromCycleRep(parts []int, max int) (*Perm, error) {
+func buildPermFromCycleRep(parts []int, max int) (Perm, error) {
 	perm, err := Identity(max + 1)
 	if err != nil {
-		return nil, err
+		return Perm{}, err
 	}
 	first, point := -1, -1
 	for _, part := range parts {
 		if part == -1 {
 			if first >= 0 && point >= 0 {
 				if int(perm.elements[point]) != point {
-					return nil, errors.New("integers must be unique")
+					return Perm{}, errors.New("integers must be unique")
 				}
 				perm.elements[point] = dot(first)
 				first, point = -1, -1
@@ -67,7 +67,7 @@ func buildPermFromCycleRep(parts []int, max int) (*Perm, error) {
 				first, point = part, part
 			} else {
 				if int(perm.elements[point]) != point {
-					return nil, errors.New("integers must be unique")
+					return Perm{}, errors.New("integers must be unique")
 				}
 				perm.elements[point] = dot(part)
 				point = part
@@ -78,7 +78,7 @@ func buildPermFromCycleRep(parts []int, max int) (*Perm, error) {
 }
 
 // TODO: more efficient serialization?
-func (p *Perm) PrintCycles() string {
+func (p Perm) PrintCycles() string {
 	cycles := p.getCycles()
 	var buf bytes.Buffer
 	for _, cycle := range cycles {
@@ -95,7 +95,7 @@ func (p *Perm) PrintCycles() string {
 }
 
 // TODO: publish?
-func (p *Perm) getCycles() [][]dot {
+func (p Perm) getCycles() [][]dot {
 	size := len(p.elements)
 	cycles := make([][]dot, 0, 1)
 	marks := make([]bool, size)

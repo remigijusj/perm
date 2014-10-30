@@ -18,7 +18,7 @@ func (s *S) TestParseCyclesInvalid(c *C) {
 }
 
 func (s *S) TestParseCyclesValid(c *C) {
-	var p *Perm
+	var p Perm
 	var e error
 
 	p, e = ParseCycles("()")

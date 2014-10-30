@@ -1,7 +1,7 @@
 package perm
 
 // TODO: uint16? caching in Perm?
-func (p *Perm) Signature() []int {
+func (p Perm) Signature() []int {
 	size := len(p.elements)
 	sign := make([]int, size+1)
 
@@ -26,7 +26,7 @@ func (p *Perm) Signature() []int {
 	return sign
 }
 
-func (p *Perm) Sign() int {
+func (p Perm) Sign() int {
 	sgn := p.Signature()
 	sum := 0
 	for i := 2; i < len(sgn); i += 2 {
@@ -40,7 +40,7 @@ func (p *Perm) Sign() int {
 }
 
 // TODO: binary reduce?
-func (p *Perm) Order() int {
+func (p Perm) Order() int {
 	if len(p.elements) < 2 {
 		return 1
 	}

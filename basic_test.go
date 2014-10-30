@@ -96,7 +96,7 @@ func (s *S) TestPower(c *C) {
 }
 
 func (s *S) TestConjugate0(c *C) {
-	var p, q *Perm
+	var p, q Perm
 	var e error
 
 	p, _ = Identity(6)
@@ -127,7 +127,7 @@ func (s *S) TestConjugate2(c *C) {
 }
 
 func (s *S) TestIsIdentity(c *C) {
-	var p *Perm
+	var p Perm
 	var e error
 
 	p, e = NewPerm([]int{})
@@ -152,7 +152,7 @@ func (s *S) TestIsIdentity(c *C) {
 }
 
 func (s *S) TestIsEqual(c *C) {
-	var p, q *Perm
+	var p, q Perm
 	var e, r error
 
 	p, e = NewPerm([]int{})
