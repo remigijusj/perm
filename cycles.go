@@ -94,7 +94,6 @@ func (p Perm) PrintCycles() string {
 	return buf.String()
 }
 
-// TODO: publish?
 func (p Perm) getCycles() [][]dot {
 	size := len(p.elements)
 	cycles := make([][]dot, 0, 1)

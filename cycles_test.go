@@ -53,7 +53,7 @@ func (s *S) TestParseCyclesValid(c *C) {
 	c.Assert(e, IsNil)
 	c.Check(p.String(), Equals, "[1 0 11 3 4 5 15 7 8 9 10 2 12 13 14 6]")
 
-	p, e = ParseCycles("(1 2 ; 3, 8 ; 7 4 ()")
+	p, e = ParseCycles("(1 2 ; 3, 8 ; 7 4 )")
 	c.Assert(e, IsNil)
 	c.Check(p.String(), Equals, "[1 0 7 6 4 5 3 2]")
 
@@ -63,11 +63,21 @@ func (s *S) TestParseCyclesValid(c *C) {
 }
 
 func (s *S) TestPrintCycles(c *C) {
-	p, e := NewPerm([]int{})
+	var p Perm
+	var e error
+
+	p = Perm{}
+	c.Check(p.PrintCycles(), Equals, "()")
+
+	p, e = NewPerm([]int{})
 	c.Assert(e, IsNil)
 	c.Check(p.PrintCycles(), Equals, "()")
 
 	p, e = NewPerm([]int{0})
+	c.Assert(e, IsNil)
+	c.Check(p.PrintCycles(), Equals, "()")
+
+	p, e = Identity(7)
 	c.Assert(e, IsNil)
 	c.Check(p.PrintCycles(), Equals, "()")
 
